@@ -22,24 +22,55 @@ export default class HederaService {
   private treasuryKey: PrivateKey
 
   constructor() {
-    // Initialiser le client Hedera
-    this.client =
-      env.get('HEDERA_NETWORK') === 'mainnet' ? Client.forMainnet() : Client.forTestnet()
-
-    // Configuration du compte trésor (opérateur)
-    this.treasuryAccount = AccountId.fromString(env.get('HEDERA_OPERATOR_ID'))
-    this.treasuryKey = PrivateKey.fromString(env.get('HEDERA_OPERATOR_KEY'))
-
-    // Configurer l'opérateur
-    this.client.setOperator(this.treasuryAccount, this.treasuryKey)
-
-    // Configurer les frais max
-    this.client.setMaxTransactionFee(new Hbar(10))
-    this.client.setMaxQueryPayment(new Hbar(1))
+    this.client = this.initClient()
   }
 
   /**
-   * Créer un nouveau wallet Hedera pour un utilisateur
+   * Initialiser le client Hedera selon les spécifications
+   */
+  initClient(): Client {
+    const network = env.get('HEDERA_NETWORK')
+    const client = network === 'mainnet' ? Client.forMainnet() : Client.forTestnet()
+
+    // Utiliser HEDERA_ACCOUNT_ID et HEDERA_PRIVATE_KEY si disponibles, sinon fallback sur OPERATOR_ID/KEY
+    const accountId =
+      env.get('HEDERA_ACCOUNT_ID') || env.get('HEDERA_OPERATOR_ID') || ''
+    const privateKey =
+      env.get('HEDERA_PRIVATE_KEY') || env.get('HEDERA_OPERATOR_KEY') || ''
+
+    if (!accountId || !privateKey) {
+      throw new Error(
+        'Variables HEDERA_ACCOUNT_ID et HEDERA_PRIVATE_KEY (ou HEDERA_OPERATOR_ID et HEDERA_OPERATOR_KEY) doivent être définies'
+      )
+    }
+
+    // Configuration du compte trésor (opérateur)
+    this.treasuryAccount = AccountId.fromString(accountId)
+    this.treasuryKey = PrivateKey.fromString(privateKey)
+
+    // Configurer l'opérateur
+    client.setOperator(this.treasuryAccount, this.treasuryKey)
+
+    // Configurer les frais max
+    client.setMaxTransactionFee(new Hbar(10))
+    client.setMaxQueryPayment(new Hbar(1))
+
+    return client
+  }
+
+  /**
+   * Créer un nouveau compte Hedera (selon spécifications)
+   */
+  async createAccount(): Promise<{
+    accountId: string
+    publicKey: string
+    privateKey: string
+  }> {
+    return this.createUserWallet()
+  }
+
+  /**
+   * Créer un nouveau wallet Hedera pour un utilisateur (méthode legacy)
    */
   async createUserWallet(): Promise<{
     accountId: string
@@ -106,7 +137,104 @@ export default class HederaService {
   }
 
   /**
-   * Exécuter une transaction de don HBAR
+   * Transférer des fonds HBAR (selon spécifications)
+   */
+  async transferFunds({
+    to,
+    amount,
+    memo,
+  }: {
+    to: string
+    amount: number
+    memo?: string
+  }): Promise<{
+    transactionId: string
+    status: string
+  }> {
+    try {
+      const transaction = await new TransferTransaction()
+        .addHbarTransfer(this.treasuryAccount, new Hbar(-amount))
+        .addHbarTransfer(AccountId.fromString(to), new Hbar(amount))
+        .setTransactionMemo(memo || `Transfer HederaSoutien: ${amount} HBAR`)
+        .freezeWith(this.client)
+
+      const signedTx = await transaction.sign(this.treasuryKey)
+      const txResponse = await signedTx.execute(this.client)
+      const receipt = await txResponse.getReceipt(this.client)
+
+      return {
+        transactionId: txResponse.transactionId.toString(),
+        status: receipt.status.toString(),
+      }
+    } catch (error) {
+      console.error('Erreur transfert de fonds:', error)
+      throw new Error(`Erreur lors du transfert: ${error}`)
+    }
+  }
+
+  /**
+   * Créer un token (selon spécifications)
+   */
+  async createToken(options?: {
+    name?: string
+    symbol?: string
+    decimals?: number
+    initialSupply?: number
+  }): Promise<{
+    tokenId: string
+    status: string
+  }> {
+    try {
+      const name = options?.name || 'HederaSoutien Token'
+      const symbol = options?.symbol || 'HST'
+      const decimals = options?.decimals ?? 8
+      const initialSupply = options?.initialSupply ?? 0
+
+      const transaction = await new TokenCreateTransaction()
+        .setTokenName(name)
+        .setTokenSymbol(symbol)
+        .setDecimals(decimals)
+        .setInitialSupply(initialSupply)
+        .setTreasuryAccountId(this.treasuryAccount)
+        .setAdminKey(this.treasuryKey)
+        .setSupplyKey(this.treasuryKey)
+        .freezeWith(this.client)
+
+      const signTx = await transaction.sign(this.treasuryKey)
+      const submitTx = await signTx.execute(this.client)
+      const receipt = await submitTx.getReceipt(this.client)
+
+      return {
+        tokenId: receipt.tokenId!.toString(),
+        status: receipt.status.toString(),
+      }
+    } catch (error) {
+      console.error('Erreur création token:', error)
+      throw new Error(`Impossible de créer le token: ${error}`)
+    }
+  }
+
+  /**
+   * Signer une transaction (selon spécifications)
+   */
+  async signTransaction(txData: {
+    transaction: TransferTransaction | TokenCreateTransaction | AccountCreateTransaction
+  }): Promise<{
+    signedTransaction: any
+  }> {
+    try {
+      const signedTransaction = await txData.transaction.sign(this.treasuryKey)
+      return {
+        signedTransaction,
+      }
+    } catch (error) {
+      console.error('Erreur signature transaction:', error)
+      throw new Error(`Impossible de signer la transaction: ${error}`)
+    }
+  }
+
+  /**
+   * Exécuter une transaction de don HBAR (méthode legacy, conservée pour compatibilité)
    */
   async executeDonation(
     donorAccountId: string,
@@ -117,29 +245,11 @@ export default class HederaService {
     transactionId: string
     status: string
   }> {
-    try {
-      const amountTinybars = amountHbar * 100_000_000
-
-      const transaction = await new TransferTransaction()
-        .addHbarTransfer(AccountId.fromString(donorAccountId), new Hbar(-amountHbar))
-        .addHbarTransfer(AccountId.fromString(beneficiaryAccountId), new Hbar(amountHbar))
-        .setTransactionMemo(memo || `Don HederaSoutien: ${amountHbar} HBAR`)
-        .freezeWith(this.client)
-
-      // Signer avec la clé du donateur (si custodial)
-      // Note: En production, il faudra récupérer et déchiffrer la clé du donateur
-      const signedTx = await transaction.sign(this.treasuryKey) // Temporaire pour test
-      const txResponse = await signedTx.execute(this.client)
-      const receipt = await txResponse.getReceipt(this.client)
-
-      return {
-        transactionId: txResponse.transactionId.toString(),
-        status: receipt.status.toString(),
-      }
-    } catch (error) {
-      console.error('Erreur transaction don:', error)
-      throw new Error(`Erreur lors du don: ${error}`)
-    }
+    return this.transferFunds({
+      to: beneficiaryAccountId,
+      amount: amountHbar,
+      memo: memo || `Don HederaSoutien: ${amountHbar} HBAR`,
+    })
   }
 
   /**

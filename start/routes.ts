@@ -15,6 +15,8 @@ const UsersController = () => import('#controllers/users_controller')
 const DonationsController = () => import('#controllers/donations_controller')
 const AssistanceRequestsController = () => import('#controllers/assistance_requests_controller')
 const NFTsController = () => import('#controllers/nfts_controller')
+const HederaController = () => import('#controllers/hedera_controller')
+const WalletController = () => import('#controllers/wallet_controller')
 
 // Route de santé
 router.get('/', async () => {
@@ -62,6 +64,26 @@ router
     router.get('/nfts/my-nfts', [NFTsController, 'myNFTs'])
     router.get('/nfts/:id', [NFTsController, 'show'])
     router.post('/nfts/:id/transfer', [NFTsController, 'transfer'])
+
+    // Routes Hedera (opérations blockchain sécurisées)
+    router
+      .group(() => {
+        router.post('/create-account', [HederaController, 'createAccount'])
+        router.post('/transfer', [HederaController, 'transfer'])
+        router.post('/create-token', [HederaController, 'createToken'])
+        router.post('/sign-transaction', [HederaController, 'signTransaction'])
+      })
+      .prefix('/hedera')
+
+    // Routes Wallet (gestion des portefeuilles utilisateurs)
+    router
+      .group(() => {
+        router.post('/create', [WalletController, 'create'])
+        router.get('/show', [WalletController, 'show'])
+        router.get('/balance', [WalletController, 'balance'])
+        router.post('/initialize', [WalletController, 'initialize'])
+      })
+      .prefix('/wallet')
   })
   .prefix('/api')
   .use(middleware.auth())

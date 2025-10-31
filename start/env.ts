@@ -42,8 +42,12 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
   HEDERA_NETWORK: Env.schema.enum(['testnet', 'mainnet'] as const),
-  HEDERA_OPERATOR_ID: Env.schema.string(),
-  HEDERA_OPERATOR_KEY: Env.schema.string(),
+  // Variables principales selon spécifications
+  HEDERA_ACCOUNT_ID: Env.schema.string.optional(),
+  HEDERA_PRIVATE_KEY: Env.schema.string.optional(),
+  // Variables existantes (conservées pour compatibilité)
+  HEDERA_OPERATOR_ID: Env.schema.string.optional(),
+  HEDERA_OPERATOR_KEY: Env.schema.string.optional(),
   HEDERA_TOPIC_ID: Env.schema.string.optional(),
   NFT_COLLECTION_DONOR_BADGES: Env.schema.string.optional(),
   NFT_COLLECTION_EQUIPMENT: Env.schema.string.optional(),
