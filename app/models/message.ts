@@ -39,4 +39,3 @@ export default class Message extends BaseModel {
   })
   declare toUser: BelongsTo<typeof User>
 }
-

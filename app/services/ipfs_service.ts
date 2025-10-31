@@ -29,7 +29,7 @@ export default class IPFSService {
       return cid.toString()
     } catch (error) {
       console.error('Erreur upload IPFS:', error)
-      throw new Error('Impossible de télécharger l'image sur IPFS')
+      throw new Error("Impossible de télécharger l'image sur IPFS")
     }
   }
 
@@ -92,4 +92,3 @@ export default class IPFSService {
     return await this.uploadMetadata(photosData)
   }
 }
-

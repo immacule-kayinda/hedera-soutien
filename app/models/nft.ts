@@ -40,4 +40,3 @@ export default class Nft extends BaseModel {
   })
   declare owner: BelongsTo<typeof User>
 }
-

@@ -106,4 +106,3 @@ export default class DonationsController {
     return response.json(donation)
   }
 }
-

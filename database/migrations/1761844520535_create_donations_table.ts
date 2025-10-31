@@ -6,9 +6,27 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').notNullable()
-      table.integer('donor_id').unsigned().notNullable().references('id').inTable('users').onDelete('CASCADE')
-      table.integer('beneficiary_id').unsigned().notNullable().references('id').inTable('users').onDelete('CASCADE')
-      table.integer('assistance_request_id').unsigned().nullable().references('id').inTable('assistance_requests').onDelete('SET NULL')
+      table
+        .integer('donor_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('users')
+        .onDelete('CASCADE')
+      table
+        .integer('beneficiary_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('users')
+        .onDelete('CASCADE')
+      table
+        .integer('assistance_request_id')
+        .unsigned()
+        .nullable()
+        .references('id')
+        .inTable('assistance_requests')
+        .onDelete('SET NULL')
       table.decimal('amount', 10, 2).notNullable()
       table.string('currency', 3).defaultTo('EUR')
       table.string('hedera_transaction_id').nullable()
@@ -24,4 +42,3 @@ export default class extends BaseSchema {
     this.schema.dropTable(this.tableName)
   }
 }
-

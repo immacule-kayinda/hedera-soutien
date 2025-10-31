@@ -12,7 +12,12 @@ export default class ConsensusEvent extends BaseModel {
   declare sequenceNumber: number
 
   @column()
-  declare eventType: 'DONATION' | 'EQUIPMENT_TRANSFER' | 'VOLUNTEER_HOURS' | 'BADGE_AWARDED' | 'OTHER'
+  declare eventType:
+    | 'DONATION'
+    | 'EQUIPMENT_TRANSFER'
+    | 'VOLUNTEER_HOURS'
+    | 'BADGE_AWARDED'
+    | 'OTHER'
 
   @column()
   declare payload: string // JSON object
@@ -26,4 +31,3 @@ export default class ConsensusEvent extends BaseModel {
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 }
-

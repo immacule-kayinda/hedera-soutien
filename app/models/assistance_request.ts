@@ -53,4 +53,3 @@ export default class AssistanceRequest extends BaseModel {
   })
   declare donations: HasMany<typeof Donation>
 }
-

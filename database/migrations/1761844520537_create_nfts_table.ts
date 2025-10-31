@@ -8,7 +8,13 @@ export default class extends BaseSchema {
       table.increments('id').notNullable()
       table.string('token_id').notNullable()
       table.string('serial_number').notNullable()
-      table.integer('owner_id').unsigned().notNullable().references('id').inTable('users').onDelete('CASCADE')
+      table
+        .integer('owner_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('users')
+        .onDelete('CASCADE')
       table.enum('type', ['badge', 'equipment', 'certificate']).notNullable()
       table.string('collection').notNullable()
       table.text('metadata').notNullable() // JSON object
@@ -24,4 +30,3 @@ export default class extends BaseSchema {
     this.schema.dropTable(this.tableName)
   }
 }
-

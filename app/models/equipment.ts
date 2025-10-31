@@ -49,4 +49,3 @@ export default class Equipment extends BaseModel {
   })
   declare currentOwner: BelongsTo<typeof User> | null
 }
-

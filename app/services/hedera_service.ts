@@ -24,9 +24,7 @@ export default class HederaService {
   constructor() {
     // Initialiser le client Hedera
     this.client =
-      env.get('HEDERA_NETWORK') === 'mainnet'
-        ? Client.forMainnet()
-        : Client.forTestnet()
+      env.get('HEDERA_NETWORK') === 'mainnet' ? Client.forMainnet() : Client.forTestnet()
 
     // Configuration du compte trésor (opérateur)
     this.treasuryAccount = AccountId.fromString(env.get('HEDERA_OPERATOR_ID'))
@@ -123,14 +121,8 @@ export default class HederaService {
       const amountTinybars = amountHbar * 100_000_000
 
       const transaction = await new TransferTransaction()
-        .addHbarTransfer(
-          AccountId.fromString(donorAccountId),
-          new Hbar(-amountHbar)
-        )
-        .addHbarTransfer(
-          AccountId.fromString(beneficiaryAccountId),
-          new Hbar(amountHbar)
-        )
+        .addHbarTransfer(AccountId.fromString(donorAccountId), new Hbar(-amountHbar))
+        .addHbarTransfer(AccountId.fromString(beneficiaryAccountId), new Hbar(amountHbar))
         .setTransactionMemo(memo || `Don HederaSoutien: ${amountHbar} HBAR`)
         .freezeWith(this.client)
 
@@ -282,4 +274,3 @@ export default class HederaService {
     return this.client
   }
 }
-

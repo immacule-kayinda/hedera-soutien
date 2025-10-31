@@ -14,13 +14,7 @@ export default class AssistanceRequestsController {
       return response.status(403).json({ error: 'Seuls les patients peuvent créer des demandes' })
     }
 
-    const data = request.only([
-      'title',
-      'description',
-      'category',
-      'amountNeeded',
-      'urgency',
-    ])
+    const data = request.only(['title', 'description', 'category', 'amountNeeded', 'urgency'])
 
     // Créer un topic Hedera pour le journal de transparence
     const hederaService = new HederaService()
@@ -146,4 +140,3 @@ export default class AssistanceRequestsController {
     })
   }
 }
-

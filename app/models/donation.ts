@@ -57,4 +57,3 @@ export default class Donation extends BaseModel {
   })
   declare assistanceRequest: BelongsTo<typeof AssistanceRequest> | null
 }
-

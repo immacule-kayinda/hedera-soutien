@@ -54,10 +54,7 @@ export default class AuthController {
     })
 
     // Mettre à jour la clé chiffrée avec le vrai ID
-    user.hederaEncryptedPrivateKey = hederaService.encryptPrivateKey(
-      wallet.privateKey,
-      user.id
-    )
+    user.hederaEncryptedPrivateKey = hederaService.encryptPrivateKey(wallet.privateKey, user.id)
     await user.save()
 
     return response.status(201).json({
@@ -103,10 +100,7 @@ export default class AuthController {
       status: 'pending',
       hederaAccountId: wallet.accountId,
       hederaPublicKey: wallet.publicKey,
-      hederaEncryptedPrivateKey: hederaService.encryptPrivateKey(
-        wallet.privateKey,
-        0
-      ),
+      hederaEncryptedPrivateKey: hederaService.encryptPrivateKey(wallet.privateKey, 0),
       walletType: 'custodial',
       reputationScore: 0,
       donationsCount: 0,
@@ -115,10 +109,7 @@ export default class AuthController {
       memberSince: new Date(),
     })
 
-    user.hederaEncryptedPrivateKey = hederaService.encryptPrivateKey(
-      wallet.privateKey,
-      user.id
-    )
+    user.hederaEncryptedPrivateKey = hederaService.encryptPrivateKey(wallet.privateKey, user.id)
     await user.save()
 
     return response.status(201).json({
@@ -180,4 +171,3 @@ export default class AuthController {
     })
   }
 }
-

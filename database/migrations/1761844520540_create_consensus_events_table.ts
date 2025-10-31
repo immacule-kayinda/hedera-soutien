@@ -8,7 +8,15 @@ export default class extends BaseSchema {
       table.increments('id').notNullable()
       table.string('topic_id').notNullable()
       table.integer('sequence_number').notNullable()
-      table.enum('event_type', ['DONATION', 'EQUIPMENT_TRANSFER', 'VOLUNTEER_HOURS', 'BADGE_AWARDED', 'OTHER']).notNullable()
+      table
+        .enum('event_type', [
+          'DONATION',
+          'EQUIPMENT_TRANSFER',
+          'VOLUNTEER_HOURS',
+          'BADGE_AWARDED',
+          'OTHER',
+        ])
+        .notNullable()
       table.text('payload').notNullable() // JSON object
       table.text('participants').nullable() // JSON array
       table.string('hedera_transaction_id').nullable()
@@ -20,4 +28,3 @@ export default class extends BaseSchema {
     this.schema.dropTable(this.tableName)
   }
 }
-
