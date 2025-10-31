@@ -118,9 +118,8 @@ export default class WalletController {
     } catch (error: any) {
       console.error('Erreur initialisation wallet:', error)
       return response.status(500).json({
-        error: error.message || 'Erreur lors de l\'initialisation du wallet',
+        error: error.message || "Erreur lors de l'initialisation du wallet",
       })
     }
   }
 }
-

@@ -106,7 +106,7 @@ export default class HederaController {
       // Cette méthode est pour usage avancé uniquement
       // En production, la signature doit être gérée par le service
       return response.status(501).json({
-        error: 'Cette fonctionnalité n\'est pas encore implémentée',
+        error: "Cette fonctionnalité n'est pas encore implémentée",
       })
     } catch (error: any) {
       console.error('Erreur signature transaction:', error)
@@ -116,4 +116,3 @@ export default class HederaController {
     }
   }
 }
-

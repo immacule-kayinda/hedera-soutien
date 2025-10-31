@@ -27,10 +27,7 @@ export default class WalletService {
       const wallet = await this.hederaService.createAccount()
 
       // Chiffrer la clé privée avant stockage
-      const encryptedPrivateKey = this.hederaService.encryptPrivateKey(
-        wallet.privateKey,
-        userId
-      )
+      const encryptedPrivateKey = this.hederaService.encryptPrivateKey(wallet.privateKey, userId)
 
       return {
         accountId: wallet.accountId,
@@ -149,4 +146,3 @@ export default class WalletService {
     }
   }
 }
-

@@ -33,10 +33,8 @@ export default class HederaService {
     const client = network === 'mainnet' ? Client.forMainnet() : Client.forTestnet()
 
     // Utiliser HEDERA_ACCOUNT_ID et HEDERA_PRIVATE_KEY si disponibles, sinon fallback sur OPERATOR_ID/KEY
-    const accountId =
-      env.get('HEDERA_ACCOUNT_ID') || env.get('HEDERA_OPERATOR_ID') || ''
-    const privateKey =
-      env.get('HEDERA_PRIVATE_KEY') || env.get('HEDERA_OPERATOR_KEY') || ''
+    const accountId = env.get('HEDERA_ACCOUNT_ID') || env.get('HEDERA_OPERATOR_ID') || ''
+    const privateKey = env.get('HEDERA_PRIVATE_KEY') || env.get('HEDERA_OPERATOR_KEY') || ''
 
     if (!accountId || !privateKey) {
       throw new Error(

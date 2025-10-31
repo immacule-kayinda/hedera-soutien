@@ -50,10 +50,7 @@ export default class TokenService {
   /**
    * Créer un nouveau token non-fungible (NFT)
    */
-  async createNFTCollection(options: {
-    name: string
-    symbol: string
-  }): Promise<{
+  async createNFTCollection(options: { name: string; symbol: string }): Promise<{
     tokenId: string
     status: string
   }> {
@@ -198,4 +195,3 @@ export default class TokenService {
     }
   }
 }
-
