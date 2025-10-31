@@ -34,5 +34,36 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring session package
   |----------------------------------------------------------
   */
-  SESSION_DRIVER: Env.schema.enum(['cookie', 'memory'] as const)
+  SESSION_DRIVER: Env.schema.enum(['cookie', 'memory'] as const),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring Hedera
+  |----------------------------------------------------------
+  */
+  HEDERA_NETWORK: Env.schema.enum(['testnet', 'mainnet'] as const),
+  HEDERA_OPERATOR_ID: Env.schema.string(),
+  HEDERA_OPERATOR_KEY: Env.schema.string(),
+  HEDERA_TOPIC_ID: Env.schema.string.optional(),
+  NFT_COLLECTION_DONOR_BADGES: Env.schema.string.optional(),
+  NFT_COLLECTION_EQUIPMENT: Env.schema.string.optional(),
+  NFT_COLLECTION_CERTIFICATES: Env.schema.string.optional(),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring IPFS
+  |----------------------------------------------------------
+  */
+  IPFS_HOST: Env.schema.string.optional(),
+  IPFS_PORT: Env.schema.number.optional(),
+  IPFS_PROTOCOL: Env.schema.string.optional(),
+  INFURA_PROJECT_ID: Env.schema.string.optional(),
+  INFURA_PROJECT_SECRET: Env.schema.string.optional(),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for encryption
+  |----------------------------------------------------------
+  */
+  ENCRYPTION_KEY: Env.schema.string(),
 })
