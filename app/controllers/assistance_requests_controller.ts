@@ -51,7 +51,7 @@ export default class AssistanceRequestsController {
    * Liste des demandes d'aide (avec filtres)
    */
   async index({ request, response }: HttpContext) {
-    const query = AssistanceRequest.query()
+    const q = AssistanceRequest.query()
       .preload('user', (query) => {
         query.select('id', 'firstName', 'lastName', 'addressCity')
       })
@@ -64,24 +64,24 @@ export default class AssistanceRequestsController {
     const status = request.input('status')
 
     if (category) {
-      query.where('category', category)
+      q.where('category', category)
     }
 
     if (urgency) {
-      query.where('urgency', urgency)
+      q.where('urgency', urgency)
     }
 
     if (status) {
-      query.where('status', status)
+      q.where('status', status)
     }
 
     if (city) {
-      query.whereHas('user', (subQuery) => {
+      q.whereHas('user', (subQuery) => {
         subQuery.where('addressCity', 'like', `%${city}%`)
       })
     }
 
-    const requests = await query.orderBy('createdAt', 'desc')
+    const requests = await q.orderBy('createdAt', 'desc')
 
     return response.json(requests)
   }
