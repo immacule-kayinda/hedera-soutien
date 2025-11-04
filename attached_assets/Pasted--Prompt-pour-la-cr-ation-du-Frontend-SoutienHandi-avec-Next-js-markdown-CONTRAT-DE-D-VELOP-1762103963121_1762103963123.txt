@@ -1,0 +1,381 @@
+# Prompt pour la création du Frontend SoutienHandi avec Next.js
+
+```markdown
+**CONTRAT DE DÉVELOPPEMENT FRONTEND - PLATEFORME SOUTIENHANDI**
+
+## CONTEXTE DU PROJET
+Je veux développer le frontend complet de **SoutienHandi** - une plateforme solidaire connectant personnes handicapées et partenaires (donateurs, bénévoles, associations) avec intégration blockchain Hedera pour la transparence.
+
+## TECHNOLOGIES EXIGÉES
+- **Framework** : Next.js 14 avec App Router
+- **Styling** : Tailwind CSS + CSS Modules
+- **State Management** : Zustand
+- **Formulaires** : React Hook Form + Zod validation
+- **Accessibilité** : Respect strict WCAG 2.1 AA
+- **Blockchain** : Intégration Hedera Hashgraph SDK
+- **Wallet** : HashPack integration
+- **Stockage** : IPFS pour les NFTs
+
+## ARCHITECTURE FRONTEND DÉTAILLÉE
+
+### STRUCTURE DES DOSSIERS
+```
+frontend/
+├── src/
+│   ├── app/                    # App Router Next.js
+│   │   ├── (auth)/            # Routes d'authentification
+│   │   ├── (dashboard)/       # Routes tableau de bord
+│   │   ├── api/               # API routes frontend
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── components/
+│   │   ├── ui/                # Composants shadcn/ui
+│   │   ├── layout/            # Layout components
+│   │   ├── auth/              # Composants authentification
+│   │   ├── dashboard/         # Composants dashboard
+│   │   ├── nft/               # Composants NFT
+│   │   ├── assistance/        # Composants aide
+│   │   └── accessibility/     # Composants accessibilité
+│   ├── contexts/              # React Contexts
+│   ├── hooks/                 # Custom hooks
+│   ├── lib/                   # Utilities & configurations
+│   ├── stores/                # Zustand stores
+│   ├── types/                 # TypeScript definitions
+│   └── utils/                 # Helper functions
+```
+
+### PAGES REQUISES
+
+#### 1. PAGE D'ACCUEIL (`/`)
+```jsx
+Fonctionnalités :
+- Hero section avec message inclusif
+- Présentation vidéo de la plateforme
+- Statistiques en temps réel (dons, aides, membres)
+- Témoignages vérifiés avec badges NFT
+- Call-to-action différenciés selon le profil
+- Footer accessible avec informations légales
+
+Sections :
+✅ HeroSection - Message principal + vidéo
+✅ StatsCounter - Compteurs animés (dons tracés, personnes aidées)
+✅ TestimonialCarousel - Témoignages avec badges NFT vérifiés
+✅ UserTypeSelector - Choix type d'utilisateur
+✅ TransparencyShowcase - Démonstration blockchain
+✅ TrustIndicators - Preuves de confiance
+```
+
+#### 2. AUTHENTIFICATION
+```jsx
+Inscription Personne Handicapée (/register/handicapped)
+- Formulaire accessible avec champs :
+  * Civilité, Nom, Prénom, Adresse, Téléphone, Email
+  * Type de handicap (moteur, visuel, auditif, autre)
+  * Établissement fréquenté
+  * Besoins immédiats
+  * Création automatique wallet Hedera
+
+Inscription Partenaire (/register/partner)  
+- Formulaire avec :
+  * Type partenaire (association, entreprise, particulier)
+  * Informations structure/personne
+  * Motif du soutien (financier, matériel, bénévolat)
+  * Création wallet Hedera
+
+Connexion (/login)
+- Formulaire email/mot de passe
+- Lien mot de passe oublié
+- Intégration HashPack wallet
+```
+
+#### 3. TABLEAUX DE BORD
+
+**Dashboard Personne Handicapée** (`/dashboard/handicapped`)
+```jsx
+Composants :
+✅ ProfileManager - Gestion profil et wallet
+✅ AssistanceWizard - Assistant demande d'aide intelligent
+✅ NeedsOverview - Vue besoins avec statuts
+✅ NFTWallet - Portefeuille badges et certificats  
+✅ TransactionHistory - Historique transactions transparent
+✅ ImpactTracker - Suivi impact des aides reçues
+✅ MessagingInterface - Messagerie interne
+```
+
+**Dashboard Donateur** (`/dashboard/donor`)
+```jsx
+Composants :
+✅ NeedDiscovery - Carte des besoins prioritaires
+✅ QuickDonation - Interface don rapide avec QR codes
+✅ NFTGallery - Galerie badges de reconnaissance
+✅ ImpactDashboard - Métriques d'impact personnalisées
+✅ TransparencyViewer - Preuves blockchain des dons
+✅ DonationHistory - Historique avec reçus cryptographiques
+```
+
+#### 4. PLATEFORME NFT
+```jsx
+NFT Wallet (/nft-wallet)
+- Galerie collections :
+  🎖️ Badges Donateurs (Bronze, Argent, Or, Diamant, Légendaire)
+  🦽 NFTs Équipements (historique de propriété)
+  📜 Certificats Compétences (bénévoles)
+  🏆 Trophées Réputation
+
+Fonctionnalités :
+✅ NFTGrid - Affichage collection
+✅ NFTCard - Carte NFT avec metadata
+✅ NFTDetailModal - Détails complets avec historique
+✅ ShareNFT - Partage social avec preuve
+✅ BadgeProgress - Progression vers prochain niveau
+```
+
+#### 5. PLACE DE MARCHÉ AIDES (/assistance)
+```jsx
+Pour Personnes Handicapées :
+✅ AssistanceRequestForm - Formulaire demande structuré
+✅ MyRequestsList - Gestion demandes avec statuts
+✅ AssistanceTracker - Suivi financement et avancement
+
+Pour Donateurs :
+✅ NeedsBrowser - Navigation besoins avec filtres
+✅ NeedCard - Carte besoin détaillée avec urgence
+✅ DonationFlow - Processus don en 3 étapes
+✅ ImpactPreview - Aperçu impact avant don
+```
+
+#### 6. TRANSPARENCE (/transparency)
+```jsx
+Page publique de vérification :
+✅ TransactionExplorer - Recherche transactions Hedera
+✅ VerificationTool - Validation hash de transaction
+✅ ImpactGallery - Preuves visuelles des aides
+✅ FinancialFlows - Visualisation flux financiers
+✅ PublicLedger - Explorateur journal blockchain
+```
+
+### COMPOSANTS UI CRITIQUES
+
+#### 1. AccessibleModal
+```jsx
+Fonctionnalités d'accessibilité :
+- Focus trapping
+- Gestion clavier (ESC, Tab)
+- ARIA labels dynamiques
+- Support lecteur écran
+- Fermeture overlay
+```
+
+#### 2. WalletConnector
+```jsx
+Intégration HashPack :
+- Détection automatique wallet
+- Connection/déconnexion
+- Affichage solde HBAR
+- Gestion multi-comptes
+- Sécurisation sessions
+```
+
+#### 3. NFTMinter
+```jsx
+Création NFTs :
+- Upload metadata IPFS
+- Génération image badge
+- Mint sur Hedera
+- Confirmation transaction
+- Affichage NFT créé
+```
+
+#### 4. DonationWizard
+```jsx
+Processus don en étapes :
+1. Sélection montant
+2. Choix bénéficiaire
+3. Confirmation transaction
+4. Génération NFT badge
+5. Reçu cryptographique
+```
+
+### HOOKS PERSONNALISÉS REQUIS
+
+```typescript
+// Gestion authentification
+const useAuth = () => {
+  user: User | null
+  login: (email: string, password: string) => Promise<void>
+  logout: () => void
+  register: (userData: RegisterData) => Promise<void>
+}
+
+// Intégration Hedera
+const useHedera = () => {
+  account: HederaAccount | null
+  balance: number
+  sendTransaction: (to: string, amount: number) => Promise<TransactionResult>
+  mintNFT: (metadata: NFTMetadata) => Promise<string>
+}
+
+// Gestion NFTs
+const useNFT = () => {
+  nfts: NFT[]
+  refreshNFTs: () => Promise<void>
+  transferNFT: (nftId: string, to: string) => Promise<void>
+}
+
+// Donations
+const useDonation = () => {
+  donate: (amount: number, beneficiaryId: string) => Promise<DonationResult>
+  donationHistory: Donation[]
+  impact: ImpactMetrics
+}
+```
+
+### STORES ZUSTAND
+
+```typescript
+// Store utilisateur
+interface UserStore {
+  user: User | null
+  wallet: Wallet | null
+  reputation: Reputation
+  setUser: (user: User) => void
+  updateReputation: (score: number) => void
+}
+
+// Store NFTs
+interface NFTStore {
+  nfts: NFT[]
+  collections: Collection[]
+  selectedNFT: NFT | null
+  loadNFTs: () => Promise<void>
+  selectNFT: (nft: NFT) => void
+}
+
+// Store transactions
+interface TransactionStore {
+  transactions: Transaction[]
+  pendingTransactions: Transaction[]
+  addTransaction: (tx: Transaction) => void
+  updateTransaction: (txId: string, status: string) => void
+}
+```
+
+### ACCESSIBILITÉ (WCAG 2.1 AA)
+
+```css
+/* Variables d'accessibilité */
+:root {
+  --color-primary: #2563eb;
+  --color-primary-contrast: #ffffff;
+  --color-focus: #3b82f6;
+  --font-size-base: 16px;
+  --line-height-base: 1.5;
+}
+
+/* Règles d'accessibilité */
+.accessibility {
+  /* Contraste minimum 4.5:1 */
+  .text-contrast { color: #1f2937; }
+  
+  /* Taille texte modifiable */
+  .text-scalable { font-size: clamp(1rem, 2.5vw, 1.25rem); }
+  
+  /* Focus visible */
+  .focus-visible { outline: 2px solid var(--color-focus); }
+  
+  /* Support lecteur écran */
+  .sr-only { 
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+  }
+}
+```
+
+### INTÉGRATION HEDERA
+
+```typescript
+// Configuration Hedera
+const hederaConfig = {
+  network: process.env.NEXT_PUBLIC_HEDERA_NETWORK,
+  operatorId: process.env.NEXT_PUBLIC_OPERATOR_ID,
+  nftCollections: {
+    donorBadges: process.env.NEXT_PUBLIC_NFT_DONOR,
+    equipment: process.env.NEXT_PUBLIC_NFT_EQUIPMENT,
+    certificates: process.env.NEXT_PUBLIC_NFT_CERTIFICATES
+  }
+}
+
+// Service Hedera frontend
+class HederaFrontendService {
+  async connectWallet(): Promise<WalletInfo>
+  async getBalance(accountId: string): Promise<number>
+  async sendDonation(to: string, amount: number): Promise<TransactionReceipt>
+  async mintBadgeNFT(metadata: BadgeMetadata): Promise<string>
+  async getNFTs(accountId: string): Promise<NFT[]>
+}
+```
+
+### EXIGENCES DE PERFORMANCE
+
+```javascript
+// Optimisations requises
+- Lighthouse score > 90
+- First Contentful Paint < 1.5s
+- Largest Contentful Paint < 2.5s  
+- Cumulative Layout Shift < 0.1
+- First Input Delay < 100ms
+
+// Code splitting automatique
+- Layouts séparés auth/dashboard
+- Lazy loading composants lourds
+- Prefetching routes critiques
+- Optimisation images (WebP, AVIF)
+```
+
+### SÉCURITÉ FRONTEND
+
+```typescript
+// Protection des données sensibles
+- Stockage sécurisé des clés
+- Validation côté client ET serveur
+- Sanitization des inputs utilisateur
+- Protection XSS et CSRF
+- Headers de sécurité Next.js
+```
+
+## LIVRABLES ATTENDUS
+
+1. **Code source complet** Next.js avec TypeScript
+2. **Configuration** Tailwind CSS et shadcn/ui
+3. **Composants** accessibles et réutilisables  
+4. **Intégration** Hedera SDK et HashPack
+5. **Tests** composants avec Jest/Testing Library
+6. **Documentation** setup et développement
+7. **Build de production** optimisé
+8. **Validation** accessibilité avec axe-core
+
+## CRITÈRES DE VALIDATION
+
+- ✅ 100% des pages accessibles (WCAG 2.1 AA)
+- ✅ Intégration Hedera fonctionnelle
+- ✅ Performance Lighthouse > 90
+- ✅ Responsive design mobile/desktop
+- ✅ Gestion d'erreurs complète
+- ✅ Internationalisation prête (i18n)
+- ✅ SEO optimisé
+- ✅ Tests automatisés
+
+---
+
+**INSTRUCTIONS POUR L'IA :** 
+Génère le code source complet Next.js selon cette architecture. Commence par le setup du projet, la configuration, puis développe chaque page et composant dans l'ordre logique. Utilise TypeScript strict et respecte scrupuleusement les exigences d'accessibilité. Intègre Hedera dès le début dans le développement.
+```
+
+Ce prompt fournit une feuille de route complète et détaillée pour le développement frontend de la plateforme SoutienHandi avec Next.js. Il couvre tous les aspects techniques, l'architecture, les composants requis, et les intégrations spécifiques comme Hedera et l'accessibilité.
+
+Souhaitez-vous que je précise certains aspects techniques ou que je commence la génération du code selon ce plan ? 🚀
