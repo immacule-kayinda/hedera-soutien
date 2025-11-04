@@ -48,6 +48,8 @@ export default function HowItWorks() {
               {step.image ? (
                 <div className="w-full max-w-xs aspect-3/4 rounded-lg overflow-hidden bg-muted">
                   <Image
+                    width={400}
+                    height={533}
                     src={step.image}
                     alt={step.title}
                     className="w-full h-full object-cover"
