@@ -28,7 +28,7 @@ export default function CTASection() {
               Créez votre profil et formulez vos demandes d&apos;assistance. La
               communauté est là pour vous soutenir.
             </p>
-            <Link href="/register/handicapped">
+            <Link href="/register">
               <Button
                 size="lg"
                 className="w-full"

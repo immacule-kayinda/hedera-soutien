@@ -26,7 +26,7 @@ export default function HeroSection() {
           </p>
 
           <div className="flex flex-wrap gap-4 mb-8">
-            <Link href="/register/handicapped">
+            <Link href="/register/">
               <Button
                 size="lg"
                 className="gap-2 backdrop-blur-md bg-white/90 text-foreground hover:bg-white border border-border"
