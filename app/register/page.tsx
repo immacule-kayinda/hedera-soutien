@@ -16,7 +16,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2, Heart, HandHelping } from "lucide-react";
-import { useRouter } from "next/dist/client/components/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export default function Register() {
