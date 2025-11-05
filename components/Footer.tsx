@@ -44,7 +44,7 @@ export default function Footer() {
                   className="hover-elevate inline-block rounded px-1 py-0.5"
                   data-testid="link-team"
                 >
-                  L'équipe
+                  L&apos;équipe
                 </a>
               </li>
               <li>
