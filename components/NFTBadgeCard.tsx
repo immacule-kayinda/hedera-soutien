@@ -38,6 +38,8 @@ export default function NFTBadgeCard({
       <CardContent className="p-4 space-y-3">
         <div className="aspect-square rounded-lg overflow-hidden bg-muted flex items-center justify-center">
           <Image
+            width={400}
+            height={300}
             src={image}
             alt={name}
             className="w-full h-full object-contain p-4"

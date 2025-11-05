@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { MapPin, Clock, Heart } from "lucide-react";
-import DonateModal from "@/pages/DonateModal";
+import DonateModal from "@/components/DonateModal";
 import Image from "next/image";
 
 interface AssistanceRequestCardProps {
@@ -57,7 +57,8 @@ export default function AssistanceRequestCard({
       {image && (
         <div className="aspect-video w-full overflow-hidden">
           <Image
-            width={1000}
+            width={500}
+            height={400}
             src={image}
             alt={title}
             className="w-full h-full object-cover"
