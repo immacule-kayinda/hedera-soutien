@@ -12,8 +12,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useToast } from "@/hooks/use-toast";
 import { Loader2, Heart } from "lucide-react";
+import { toast } from "sonner";
 
 interface DonateModalProps {
   open: boolean;
@@ -22,8 +22,11 @@ interface DonateModalProps {
   requestId?: string;
 }
 
-export default function DonateModal({ open, onOpenChange, requestTitle }: DonateModalProps) {
-  const { toast } = useToast();
+export default function DonateModal({
+  open,
+  onOpenChange,
+  requestTitle,
+}: DonateModalProps) {
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState("");
 
@@ -32,10 +35,9 @@ export default function DonateModal({ open, onOpenChange, requestTitle }: Donate
     setLoading(true);
 
     // Simulation de don (frontend seulement)
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    toast({
-      title: "Don effectué avec succès",
+    toast.success("Don effectué avec succès", {
       description: `Vous avez donné ${amount} ℏ. Transaction enregistrée sur Hedera.`,
     });
 
@@ -52,9 +54,7 @@ export default function DonateModal({ open, onOpenChange, requestTitle }: Donate
             <Heart className="h-5 w-5 text-primary" />
             Faire un don
           </DialogTitle>
-          <DialogDescription>
-            {requestTitle}
-          </DialogDescription>
+          <DialogDescription>{requestTitle}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleDonate}>
           <div className="space-y-4 py-4">

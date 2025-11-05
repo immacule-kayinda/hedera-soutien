@@ -21,13 +21,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function CreateRequest() {
   const router = useRouter();
-  const { toast } = useToast();
+
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -45,8 +45,7 @@ export default function CreateRequest() {
     // Simulation de création (frontend seulement)
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    toast({
-      title: "Demande créée avec succès",
+    toast.success("Demande créée avec succès", {
       description: "Votre demande d'aide a été publiée sur la plateforme",
     });
 

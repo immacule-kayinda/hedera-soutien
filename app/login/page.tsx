@@ -12,16 +12,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
-import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function Login() {
   const router = useRouter();
   const { login } = useAuth();
-  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -34,16 +33,13 @@ export default function Login() {
 
     try {
       await login(formData.email, formData.password);
-      toast({
-        title: "Connexion réussie",
+      toast.success("Connexion réussie", {
         description: "Bienvenue sur HandiHelp !",
       });
       router.push("/");
     } catch (error) {
-      toast({
-        title: "Erreur de connexion",
+      toast.error("Erreur de connexion", {
         description: "Veuillez vérifier vos identifiants",
-        variant: "destructive",
       });
     } finally {
       setLoading(false);

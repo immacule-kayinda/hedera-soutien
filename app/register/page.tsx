@@ -15,14 +15,13 @@ import {
 } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuth } from "@/contexts/AuthContext";
-import { useToast } from "@/hooks/use-toast";
 import { Loader2, Heart, HandHelping } from "lucide-react";
 import { useRouter } from "next/dist/client/components/navigation";
+import { toast } from "sonner";
 
 export default function Register() {
   const router = useRouter();
   const { register } = useAuth();
-  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -36,10 +35,8 @@ export default function Register() {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Erreur",
+      toast.error("Erreur", {
         description: "Les mots de passe ne correspondent pas",
-        variant: "destructive",
       });
       return;
     }
@@ -53,16 +50,13 @@ export default function Register() {
         password: formData.password,
         role: formData.role,
       });
-      toast({
-        title: "Inscription réussie",
+      toast.success("Inscription réussie", {
         description: "Bienvenue dans la communauté HandiHelp !",
       });
       router.push("/");
     } catch (error) {
-      toast({
-        title: "Erreur d'inscription",
-        description: "Une erreur s'est produite"  ,
-        variant: "destructive",
+      toast.error("Erreur d'inscription", {
+        description: "Une erreur s'est produite",
       });
     } finally {
       setLoading(false);
