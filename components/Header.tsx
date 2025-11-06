@@ -17,7 +17,7 @@ import { useState } from "react";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout, isAuthenticated, isLoading } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -45,15 +45,24 @@ export default function Header() {
                 Transparence
               </div>
             </Link>
-            <Link href="/nft-wallet" data-testid="link-nft">
-              <div className="hover-elevate active-elevate-2 px-4 py-2 rounded-md text-sm font-medium cursor-pointer">
-                Mes NFT
-              </div>
-            </Link>
+            {isAuthenticated && (
+              <Link href="/dashboard" data-testid="link-dashboard">
+                <div className="hover-elevate active-elevate-2 px-4 py-2 rounded-md text-sm font-medium cursor-pointer">
+                  Mon espace
+                </div>
+              </Link>
+            )}
+            {isAuthenticated && user?.role === "DONOR" && (
+              <Link href="/nft-wallet" data-testid="link-nft">
+                <div className="hover-elevate active-elevate-2 px-4 py-2 rounded-md text-sm font-medium cursor-pointer">
+                  Mes NFT
+                </div>
+              </Link>
+            )}
           </nav>
 
           <div className="flex items-center gap-2">
-            {isAuthenticated && user?.role === "donor" && (
+            {isAuthenticated && user?.role === "DONOR" && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -135,11 +144,20 @@ export default function Header() {
                 Transparence
               </div>
             </Link>
-            <Link href="/nft-wallet" data-testid="link-mobile-nft">
-              <div className="block hover-elevate active-elevate-2 px-4 py-2 rounded-md text-sm font-medium cursor-pointer">
-                Mes NFT
-              </div>
-            </Link>
+            {isAuthenticated && (
+              <Link href="/dashboard" data-testid="link-mobile-dashboard">
+                <div className="block hover-elevate active-elevate-2 px-4 py-2 rounded-md text-sm font-medium cursor-pointer">
+                  Mon espace
+                </div>
+              </Link>
+            )}
+            {isAuthenticated && user?.role === "DONOR" && (
+              <Link href="/nft-wallet" data-testid="link-mobile-nft">
+                <div className="block hover-elevate active-elevate-2 px-4 py-2 rounded-md text-sm font-medium cursor-pointer">
+                  Mes NFT
+                </div>
+              </Link>
+            )}
             <div className="pt-2 space-y-2">
               <Link href="/login">
                 <Button

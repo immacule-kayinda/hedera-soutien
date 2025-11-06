@@ -32,14 +32,16 @@ export default function Login() {
     setLoading(true);
 
     try {
-      await login(formData.email, formData.password);
+      await login({ email: formData.email, password: formData.password });
       toast.success("Connexion réussie", {
         description: "Bienvenue sur HandiHelp !",
       });
       router.push("/");
     } catch (error) {
+      const description =
+        error instanceof Error ? error.message : "Veuillez vérifier vos identifiants";
       toast.error("Erreur de connexion", {
-        description: "Veuillez vérifier vos identifiants",
+        description,
       });
     } finally {
       setLoading(false);

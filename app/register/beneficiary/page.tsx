@@ -54,24 +54,15 @@ export default function BeneficiaryRegisterPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/register/beneficiary", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message ?? "Une erreur s'est produite");
-      }
-
-      const user = await response.json();
-
       await registerUser({
-        name: user.name,
-        email: user.email,
+        role: "BENEFICIARY",
+        fullName: values.fullName,
+        email: values.email,
         password: values.password,
-        role: "beneficiary",
+        confirmPassword: values.confirmPassword,
+        phone: values.phone,
+        city: values.city,
+        needsDescription: values.needsDescription,
       });
 
       toast.success("Inscription réussie", {
@@ -92,7 +83,9 @@ export default function BeneficiaryRegisterPage() {
       <Card className="w-full max-w-2xl">
         <CardHeader>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => router.push("/register")}>{<ArrowLeft className="h-5 w-5" />}</Button>
+            <Button variant="ghost" size="icon" onClick={() => router.push("/register")}>
+              {<ArrowLeft className="h-5 w-5" />}
+            </Button>
             <div>
               <CardTitle className="text-2xl font-display">Inscription bénéficiaire</CardTitle>
               <CardDescription>
@@ -212,7 +205,7 @@ export default function BeneficiaryRegisterPage() {
                 Créer mon compte bénéficiaire
               </Button>
               <p className="text-sm text-muted-foreground text-center">
-                Vous êtes donateur ? {" "}
+                Vous êtes donateur ?{" "}
                 <Link href="/register/donor" className="text-primary hover:underline">
                   Accéder au formulaire donateur
                 </Link>

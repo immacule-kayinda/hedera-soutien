@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HandiHelp
 
-## Getting Started
+Application Next.js (App Router) avec TailwindCSS / ShadCN UI, Prisma et PostgreSQL.
 
-First, run the development server:
+## Prérequis
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js ≥ 18
+- pnpm
+- PostgreSQL
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Installation rapide
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Installer les dépendances**
+   ```powershell
+   Set-Location "c:\Users\Silikin Store\projects\handihelp"; pnpm install
+   ```
+2. **Configurer l'environnement**
+   - Copier `.env.example` en `.env`
+   - Adapter les identifiants PostgreSQL (`DATABASE_URL`)
+3. **Créer la base**
+   ```sql
+   CREATE DATABASE handihelp;
+   ```
+4. **Appliquer le schéma Prisma**
+   ```powershell
+   Set-Location "c:\Users\Silikin Store\projects\handihelp"; pnpm prisma migrate dev --name init
+   ```
+5. **Démarrer le serveur**
+   ```powershell
+   Set-Location "c:\Users\Silikin Store\projects\handihelp"; pnpm dev
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Structure notable
 
-## Learn More
+- `app/api/register/route.ts` : endpoint unique pour l'inscription (bénéficiaire ou donateur)
+- `app/api/login/route.ts` : endpoint de connexion
+- `contexts/AuthContext.tsx` : provider React utilisant ces endpoints
+- `services/auth.ts` : service HTTP mutualisé
+- `prisma/schema.prisma` : schéma Prisma
 
-To learn more about Next.js, take a look at the following resources:
+## Authentification (MVP)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Enregistrement : `/api/register`
+- Connexion : `/api/login`
+- Hash des mots de passe avec `bcryptjs`
+- Stockage des utilisateurs dans la table `User`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Prochaines étapes conseillées
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Renforcer la gestion de session (cookies sécurisés, JWT, etc.)
+- Ajouter des validations côté client/serveur supplémentaires
+- Mettre en place des tests (unitaires/E2E) dès que la base est stable

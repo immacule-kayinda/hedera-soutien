@@ -1,5 +1,6 @@
 "use client";
 
+import ProtectedRoute from "@/components/ProtectedRoute";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import NFTBadgeCard from "@/components/NFTBadgeCard";
@@ -39,17 +40,19 @@ export default function NFTWallet() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8">
-            <h1 className="font-display font-bold text-3xl sm:text-4xl mb-4">
-              Mon Wallet NFT
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Gérez vos badges de reconnaissance et votre wallet Hedera
-            </p>
+    <ProtectedRoute>
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-8">
+              <h1 className="font-display font-bold text-3xl sm:text-4xl mb-4">
+                Mon Wallet NFT
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Gérez vos badges de reconnaissance et votre wallet Hedera
+              </p>
+            </div>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
@@ -93,5 +96,5 @@ export default function NFTWallet() {
       </main>
       <Footer />
     </div>
-  );
-}
+        </ProtectedRoute>
+);

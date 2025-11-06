@@ -1,75 +1,88 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect, useCallback } from "react";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: "beneficiary" | "donor";
-  hederaAccount?: string;
-  balance?: number;
-}
+import {
+  AuthUser,
+  LoginPayload,
+  registerUser as registerService,
+  loginUser as loginService,
+  RegisterPayload,
+  getCurrentUser,
+} from "@/services/auth";
 
 interface AuthContextType {
-  user: User | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (data: {
-    name: string;
-    email: string;
-    password: string;
-    role: "beneficiary" | "donor";
-  }) => Promise<void>;
-  logout: () => void;
+  user: AuthUser | null;
+  login: (payload: LoginPayload) => Promise<void>;
+  register: (payload: RegisterPayload) => Promise<void>;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
+  isLoading: boolean;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const login = async (email: string, password: string) => {
-    // Simulation de login (frontend seulement)
-    await new Promise((resolve) => setTimeout(resolve, 500));
+  useEffect(() => {
+    let isMounted = true;
 
-    // Utilisateur de démo
-    setUser({
-      id: "demo-user-1",
-      name: "Marie Dubois",
-      email,
-      role: "donor",
-      hederaAccount: "0.0.7144230",
-      balance: 1000,
-    });
-  };
+    const hydrate = async () => {
+      try {
+        const currentUser = await getCurrentUser();
+        if (isMounted) {
+          setUser(currentUser);
+        }
+      } catch (error) {
+        console.error("[AUTH_CONTEXT] Failed to fetch session", error);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
 
-  const register = async (data: {
-    name: string;
-    email: string;
-    password: string;
-    role: "beneficiary" | "donor";
-  }) => {
-    // Simulation de register (frontend seulement)
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    void hydrate();
 
-    setUser({
-      id: `demo-user-${Date.now()}`,
-      name: data.name,
-      email: data.email,
-      role: data.role,
-      hederaAccount: data.role === "donor" ? "0.0.7144230" : undefined,
-      balance: data.role === "donor" ? 1000 : undefined,
-    });
-  };
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
-  const logout = () => {
+  const refreshUser = useCallback(async () => {
+    const currentUser = await getCurrentUser();
+    setUser(currentUser);
+  }, []);
+
+  const login = useCallback(async (payload: LoginPayload) => {
+    const { user: authenticatedUser } = await loginService(payload);
+    setUser(authenticatedUser);
+  }, []);
+
+  const register = useCallback(async (payload: RegisterPayload) => {
+    const { user: registeredUser } = await registerService(payload);
+    setUser(registeredUser);
+  }, []);
+
+  const logout = useCallback(async () => {
+    await fetch("/api/session", { method: "DELETE" });
     setUser(null);
-  };
+  }, []);
 
   return (
     <AuthContext.Provider
-      value={{ user, login, register, logout, isAuthenticated: !!user }}
+      value={{
+        user,
+        login,
+        register,
+        logout,
+        isAuthenticated: !!user,
+        isLoading,
+        refreshUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

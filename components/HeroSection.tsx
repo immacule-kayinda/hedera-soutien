@@ -36,7 +36,7 @@ export default function HeroSection() {
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
-            <Link href="/register/donor">
+            <Link href="/register">
               <Button
                 size="lg"
                 variant="outline"

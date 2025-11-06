@@ -53,24 +53,15 @@ export default function DonorRegisterPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/register/donor", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message ?? "Une erreur s'est produite");
-      }
-
-      const user = await response.json();
-
       await registerUser({
-        name: user.name,
-        email: user.email,
+        role: "DONOR",
+        organizationName: values.organizationName,
+        email: values.email,
         password: values.password,
-        role: "donor",
+        confirmPassword: values.confirmPassword,
+        phone: values.phone,
+        website: values.website,
+        donationPreferences: values.donationPreferences,
       });
 
       toast.success("Inscription réussie", {
@@ -91,7 +82,9 @@ export default function DonorRegisterPage() {
       <Card className="w-full max-w-2xl">
         <CardHeader>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => router.push("/register")}>{<ArrowLeft className="h-5 w-5" />}</Button>
+            <Button variant="ghost" size="icon" onClick={() => router.push("/register")}>
+              {<ArrowLeft className="h-5 w-5" />}
+            </Button>
             <div>
               <CardTitle className="text-2xl font-display">Inscription donateur</CardTitle>
               <CardDescription>
@@ -210,7 +203,7 @@ export default function DonorRegisterPage() {
                 Créer mon compte donateur
               </Button>
               <p className="text-sm text-muted-foreground text-center">
-                Besoin du formulaire bénéficiaire ? {" "}
+                Besoin du formulaire bénéficiaire ?{" "}
                 <Link href="/register/beneficiary" className="text-primary hover:underline">
                   Devenir bénéficiaire
                 </Link>
